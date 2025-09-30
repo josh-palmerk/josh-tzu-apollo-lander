@@ -10,6 +10,7 @@
 #pragma once
 
 #define _USE_MATH_DEFINES
+#include <complex>
 #include <math.h>   // for M_PI which is 3.14159
 
 class TestPosition;
@@ -30,23 +31,25 @@ public:
    friend TestLander;
    
    // Constructors
-   Angle()                 : radians(-99.9)  {}
-   Angle(const Angle& rhs) : radians(-99.9)  {}
-   Angle(double degrees)   : radians(-99.9)  {}
+   Angle()                 : radians()  {}
+   Angle(const Angle& rhs) : radians(rhs.radians)  {}
+   Angle(double degrees)   : radians(normalize(convertToRadians(degrees)))  {}
 
    // Getters
-   double getDegrees() const { return -99.9; }
-   double getRadians() const { return -99.9; }
+   double getDegrees() const { return convertToDegrees(normalize(radians)); }
+   double getRadians() const { return normalize(radians); }
 
    // Setters
-   void setDegrees(double degrees) { }
-   void setRadians(double radians) { }
-   void setUp()                    { }
-   void setDown()                  { }
-   void setRight()                 { }
-   void setLeft()                  { }
-   void reverse()                  { }
-   Angle& add(double delta) { radians = -99.9; return *this; }
+   void setDegrees(double degrees) { radians = normalize(convertToRadians(degrees))}
+   void setRadians(double r) { radians = normalize(r); }
+   void setUp()                    { radians = ConvertToRadians(0);}
+   void setDown()                  { radians = ConvertToRadians(180)}
+   void setRight()                 { radians = ConvertToRadians(90)}
+   void setLeft()                  { radians = ConvertToRadians(270)}
+   void reverse()                  { radians += M_PI;}
+   Angle& add(double delta)
+   {
+       radians = normalize(delta); return *this; }
 
 private:
    double normalize(double radians) const;
