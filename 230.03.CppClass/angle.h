@@ -13,11 +13,14 @@
 
 #pragma once
 
+const double PI = 3.141592653589793;
+
 #define TWO_PI 6.28318530718
 
 #include <math.h>    // for floor()
 #include <iostream>  // for cout
 #include <cassert>   // for assert()
+#include <cmath>     // for floating-point modulus
 using namespace std;
 
 class TestAngle;
@@ -28,6 +31,26 @@ class TestAngle;
 class Angle
 {
    friend TestAngle;
+
+
+
+
+
+
+	private:
+
+	
+	double normalize(double radians) {
+		return fmod(radians, TWO_PI);
+	}
+
+	double convertToDegrees(double radians) {
+		return radians * (180 / PI);
+	}
+	
+	double convertToDegrees(double degrees) {
+		return degrees * (PI / 180);
+	}
 
 };
 
