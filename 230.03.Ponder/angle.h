@@ -30,23 +30,23 @@ public:
    friend TestLander;
    
    // Constructors
-   Angle()                 : radians(-99.9)  {}
-   Angle(const Angle& rhs) : radians(-99.9)  {}
-   Angle(double degrees)   : radians(-99.9)  {}
+   Angle()                 : radians(0)  {}
+   Angle(const Angle& rhs) : radians(rhs.radians)  {}
+   Angle(double degrees)   : radians(normalize(degrees * (M_PI / 180)))  {}
 
    // Getters
-   double getDegrees() const { return -99.9; }
-   double getRadians() const { return -99.9; }
+   double getDegrees() const { return radians * (180 / M_PI); }
+   double getRadians() const { return radians; }
 
    // Setters
-   void setDegrees(double degrees) { }
-   void setRadians(double radians) { }
-   void setUp()                    { }
-   void setDown()                  { }
-   void setRight()                 { }
-   void setLeft()                  { }
-   void reverse()                  { }
-   Angle& add(double delta) { radians = -99.9; return *this; }
+   void setDegrees(double degrees) { this->radians = normalize(degrees * (M_PI / 180)); }
+   void setRadians(double radians) { this->radians = normalize(radians); }
+   void setUp() { this->radians = 0;  }
+   void setDown() { this->radians = M_PI; }
+   void setRight() { this->radians = M_PI / 2; }
+   void setLeft() { this->radians = 1.5 * M_PI; }
+   void reverse() { this->radians += M_PI; }
+   Angle& add(double delta) { radians = normalize(radians + delta); return *this; }
 
 private:
    double normalize(double radians) const;
