@@ -16,10 +16,10 @@
  * ACCELERATION : ADD
  *  a += a
  *********************************************/
-void Acceleration::add(const Acceleration& acceleration)
+void Acceleration::add(const Acceleration& rhs)
 {
-   ddx = -99.9;
-   ddy = -88.8;
+   this->ddx += rhs.ddx;
+   this->ddy += rhs.ddy;
 }
 
 /*********************************************
@@ -28,6 +28,6 @@ void Acceleration::add(const Acceleration& acceleration)
  *********************************************/
 void Acceleration::set(const Angle & angle, double magnitude)
 {
-   ddx = -99.9;
-   ddy = -88.8;
+   this->ddx = magnitude * sin(angle.getRadians());
+   this->ddx = magnitude * sin(angle.getRadians());
 }
