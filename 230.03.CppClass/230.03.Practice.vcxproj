@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0c729dbb-c1e0-460e-8a29-4f5ac89e7bf8}</ProjectGuid>
-    <RootNamespace>Lab03</RootNamespace>
+    <ProjectGuid>{e36b9390-0596-4bd6-a454-93864306f179}</ProjectGuid>
+    <RootNamespace>My23003Practice</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,18 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="acceleration.h" />
-    <ClInclude Include="angle.h" />
-    <ClInclude Include="test.h" />
-    <ClInclude Include="testAcceleration.h" />
-    <ClInclude Include="testAngle.h" />
-    <ClInclude Include="unitTest.h" />
+    <ClCompile Include="angle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="acceleration.cpp" />
-    <ClCompile Include="angle.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="test.cpp" />
+    <ClInclude Include="angle.h" />
+    <ClInclude Include="testAngle.h" />
+    <ClInclude Include="unitTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

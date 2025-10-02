@@ -17,8 +17,14 @@ using namespace std;
   ************************************/
 double Angle::normalize(double radians) const
 {
-   return -99.9;
+	while (radians < 0) 
+	{
+		radians += (2 * M_PI);
+	}
+   return fmod(radians, (2 * M_PI));
 }
+
+
 
 
 
