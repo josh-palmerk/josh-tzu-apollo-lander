@@ -50,7 +50,9 @@ public:
 
 private:
    double normalize(double radians) const;
-
+   double convertToDegrees(double radians) const;
+   double convertToRadians(double radians) const;
+    
    double radians;   // 360 degrees equals 2 PI radians
 };
 

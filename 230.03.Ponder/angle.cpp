@@ -9,8 +9,9 @@
 
 #include "angle.h"
 #include <math.h>  // for floor()
-#include <cassert>
+#include <cassert>	
 using namespace std;
+
 
  /************************************
   * ANGLE : NORMALIZE
@@ -24,7 +25,16 @@ double Angle::normalize(double radians) const
    return fmod(radians, (2 * M_PI));
 }
 
+double Angle::convertToDegrees(double r) const
+{
+	double rNormalized = normalize(r);
+	return rNormalized*(180.0/M_PI);
+}
 
+double Angle::convertToRadians(double d) const
+{
+	return normalize(d*(M_PI/180.0));
+}
 
 
 
