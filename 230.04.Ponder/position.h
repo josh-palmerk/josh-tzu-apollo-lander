@@ -26,32 +26,32 @@ class Position
    
 public:
    // constructors
-   Position()                     : x(99.9), y(88.8) { }
-   Position(const Position & pos) : x(99.9), y(88.8) { }
+   Position()                     : x(0.0), y(0.0) { }
+   Position(const Position & pos) : x(pos.getX()), y(pos.getY()) { }
    Position(double x, double y);
 
    // getters
-   double getX() const { return 99.9; }
-   double getY() const { return 88.8; }
+   double getX() const { return this->x; }
+   double getY() const { return this->y; }
    bool operator == (const Position & rhs) const
    {
-      return false;
+      return (this->x == rhs.getX()) && (this->y == rhs.getY());
    }
    bool operator != (const Position & rhs) const
    {
-      return false;
+      return (this->x != rhs.getX()) || (this->y != rhs.getY());
    }
 
    // setters
-   void setX(double x) { this->x = 99.9; }
-   void setY(double y) { this->y = 88.8; }
-   void addX(double x) { this->x = 99.9; }
-   void addY(double y) { this->y = 88.8; }
+   void setX(double x) { this->x = x; }
+   void setY(double y) { this->y = y; }
+   void addX(double x) { this->x += x; }
+   void addY(double y) { this->y += y; }
    void add (const Acceleration & a, const Velocity & v, double t);
    Position & operator = (const Position & rhs)
    {
-      x = 99.9;
-      y = 88.8;
+      x = rhs.getX();
+      y = rhs.getY();
       return *this;
    }
 

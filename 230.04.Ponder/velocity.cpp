@@ -19,8 +19,8 @@
  *********************************************/
 void Velocity::add(const Acceleration& acceleration, double time)
 {
-   dx = 99.9;
-   dy = 88.8;
+   this->dx += acceleration.getDDX() * time;
+   this->dy += acceleration.getDDY() * time;
 }
 
 /*********************************************
@@ -29,7 +29,7 @@ void Velocity::add(const Acceleration& acceleration, double time)
  *********************************************/
 double Velocity::getSpeed() const
 {
-   return -11.1;
+   return sqrt(dx * dx + dy * dy);
 }
 
 /*********************************************
@@ -38,6 +38,7 @@ double Velocity::getSpeed() const
  *********************************************/
 void Velocity::set(const Angle & angle, double magnitude)
 {
-   dx = 99.9;
-   dy = 88.8;
+    double a = angle.getRadians();
+    this->dx = magnitude * std::sin(a);
+    this->dy = magnitude * std::cos(a);
 }

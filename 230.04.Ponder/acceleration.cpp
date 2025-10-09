@@ -10,7 +10,9 @@
 #include "acceleration.h"
 #include "angle.h"
 
+#include <iostream>
 #include <cmath>
+#include <numbers>
 
 /*********************************************
  * ACCELERATION : ADD
@@ -18,8 +20,8 @@
  *********************************************/
 void Acceleration::add(const Acceleration& acceleration)
 {
-   ddx = -99.9;
-   ddy = -88.8;
+     ddx = acceleration.getDDX() + ddx;
+     ddy = acceleration.getDDY() + ddy;
 }
 
 /*********************************************
@@ -28,6 +30,7 @@ void Acceleration::add(const Acceleration& acceleration)
  *********************************************/
 void Acceleration::set(const Angle & angle, double magnitude)
 {
-   ddx = -99.9;
-   ddy = -88.8;
+    double a = angle.getRadians();
+    ddx = magnitude * std::sin(a);
+    ddy = magnitude * std::cos(a);
 }
