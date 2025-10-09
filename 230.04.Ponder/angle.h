@@ -9,8 +9,10 @@
 
 #pragma once
 
+using namespace std;
 #define _USE_MATH_DEFINES
 #include <math.h>   // for M_PI which is 3.14159
+#include <iomanip>
 
 class TestPosition;
 class TestVelocity;
@@ -30,27 +32,29 @@ public:
    friend TestLander;
    
    // Constructors
-   Angle()                 : radians(-99.9)  {}
-   Angle(const Angle& rhs) : radians(-99.9)  {}
-   Angle(double degrees)   : radians(-99.9)  {}
+   Angle();
+   Angle(const Angle& rhs);
+   Angle(double degrees);
 
    // Getters
-   double getDegrees() const { return -99.9; }
-   double getRadians() const { return -99.9; }
+   double getDegrees() const;
+   double getRadians() const;
 
    // Setters
-   void setDegrees(double degrees) { }
-   void setRadians(double radians) { }
-   void setUp()                    { }
-   void setDown()                  { }
-   void setRight()                 { }
-   void setLeft()                  { }
-   void reverse()                  { }
-   Angle& add(double delta) { radians = -99.9; return *this; }
+   void setDegrees(double degrees);
+   void setRadians(double radians);
+   void setUp();
+   void setDown();
+   void setRight();
+   void setLeft();
+   void reverse();
+   Angle& add(double delta);
 
 private:
-   double normalize(double radians) const;
+	double normalize(double radians) const;
+	double convertToDegrees(double radians) const;
+	double convertToRadians(double degrees) const;
 
-   double radians;   // 360 degrees equals 2 PI radians
+	double radians;
 };
 
