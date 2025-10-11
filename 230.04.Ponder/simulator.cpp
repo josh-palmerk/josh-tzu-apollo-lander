@@ -29,6 +29,11 @@ public:
       posLander.setX(posUpperRight.getX() / 2.0);
       posLander.setY(posUpperRight.getY() / 2.0);
       angle.setUp(); // 0 radians (facing up)
+
+      posStar.setX(300.0);
+      posStar.setY(350.0);
+
+      phase = 0.0;
    }
        
    // display stuff on the screen
@@ -41,7 +46,9 @@ public:
    // attributes
    Ground ground;
    Position posLander;
+   Position posStar;
    Angle angle;
+   double phase;
 };
 
 /**********************************************************
@@ -59,7 +66,7 @@ void Simulator::display()
    gout.drawLander(posLander, angle.getRadians());
 
    // draw a star
-// gout.drawStar(posStar, phase);
+   gout.drawStar(posStar, phase);
 }
 
 
