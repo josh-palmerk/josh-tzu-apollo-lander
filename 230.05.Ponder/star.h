@@ -18,5 +18,15 @@
 class Star
 {
 public:
-
+	void reset(double width, double height) 
+	{
+		pos = Position(width, height);
+	};
+	void draw(ogstream gout)
+	{
+		phase++;
+	};
+private:
+	Position pos;
+	unsigned char phase;
 };
