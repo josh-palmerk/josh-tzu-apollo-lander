@@ -42,8 +42,27 @@ void Lander :: draw(const Thrust & thrust, ogstream & gout) const
  ***************************************************************/
 Acceleration Lander :: input(const Thrust& thrust, double gravity)
 {
-   //pos.setX(-99.9);
-   return Acceleration();
+   Acceleration a;
+
+   a.setDDY(gravity);
+
+   angle.add(thrust.rotation());
+   if (thrust.isClock() || thrust.isCounter()) fuel -= 1.0;
+   if (fuel <= 0.0) fuel = 0.0;
+
+   if (fuel > 0.0 && thrust.isMain())
+   {
+	   fuel -= 10.0;
+	   if (fuel <= 0.0) fuel = 0.0;
+	   //edit fuel amount here?
+	   Acceleration thrustAcc;
+	   thrustAcc.set(angle, thrust.mainEngineThrust());
+	   thrustAcc.setDDX(-thrustAcc.getDDX());
+	   a.add(thrustAcc);
+
+   }
+
+   return a;
 }
 
 /******************************************************************
@@ -52,7 +71,7 @@ Acceleration Lander :: input(const Thrust& thrust, double gravity)
  *******************************************************************/
 void Lander :: coast(Acceleration & acceleration, double time)
 {
-   pos.addX(acceleration.getDDX() * time);
-   pos.addY(acceleration.getDDY() * time);
-   
+   // update position, then increase velocity for next tick
+   pos.add(acceleration, velocity, time);
+   velocity.add(acceleration, time);
 }
