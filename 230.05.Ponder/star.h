@@ -25,6 +25,7 @@ public:
 	void draw(ogstream gout)
 	{
 		phase++;
+		gout.drawStar(pos);
 	};
 private:
 	Position pos;
