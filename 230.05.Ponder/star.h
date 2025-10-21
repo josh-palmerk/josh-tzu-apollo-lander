@@ -20,7 +20,7 @@ class Star
 public:
 	void reset(double width, double height) 
 	{
-		pos = Position(width, height);
+		pos = Position(random(0.0, width), random(0.0, height));
 	};
 	void draw(ogstream gout)
 	{
