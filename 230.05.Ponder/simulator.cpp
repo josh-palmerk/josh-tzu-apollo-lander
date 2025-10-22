@@ -4,7 +4,9 @@
  **********************************************************************/
 
 #include "position.h"    // everything should have a point
-#include "angle.h"       // angle of the lander
+#include "acceleration.h"// for ACCELERATION
+#include "lander.h"      // for LANDER
+#include "star.h"        // for STAR
 #include "uiInteract.h"  // for INTERFACE
 #include "uiDraw.h"      // for RANDOM and DRAW*
 #include "ground.h"      // for GROUND
@@ -21,53 +23,10 @@ using namespace std;
 class Simulator
 {
 public:
-   // set up the simulator
-   Simulator(const Position & posUpperRight) 
-      : ground(posUpperRight)
-   {
-      // Start lander in the middle of the screen, facing up
-      posLander.setX(posUpperRight.getX() / 2.0);
-      posLander.setY(posUpperRight.getY() / 2.0);
-      angle.setUp(); // 0 radians (facing up)
-
-      posStar.setX(300.0);
-      posStar.setY(350.0);
-
-      phase = 0.0;
-   }
-       
-   // display stuff on the screen
-   void display();
-
-   // rotate functions
-   void rotateRight() { angle.add(-0.1); } // Clockwise
-   void rotateLeft()  { angle.add(0.1); }  // Counterclockwise
-
-   // attributes
+   Simulator(const Position & posUpperRight) : ground(posUpperRight) {}
    Ground ground;
-   Position posLander;
-   Position posStar;
-   Angle angle;
-   double phase;
 };
 
-/**********************************************************
- * DISPLAY
- * Draw on the screen
- **********************************************************/
-void Simulator::display()
-{
-   ogstream gout;
-
-   // draw the groun
-   ground.draw(gout);
-
-   // draw the lander
-   gout.drawLander(posLander, angle.getRadians());
-
-   // draw a star
-   gout.drawStar(posStar, phase);
-}
 
 
 /*************************************
@@ -80,16 +39,10 @@ void callBack(const Interface* pUI, void* p)
    // is the first step of every single callback function in OpenGL. 
    Simulator * pSimulator = (Simulator *)p;
 
-   // draw the game
-   pSimulator->display();
+   ogstream gout;
 
-   // handle input
-   if (pUI->isRight())
-      pSimulator->rotateRight();
-   if (pUI->isLeft())
-      pSimulator->rotateLeft();
-
-
+   // draw the ground
+   pSimulator->ground.draw(gout);
 }
 
 /*********************************
