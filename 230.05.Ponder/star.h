@@ -20,7 +20,9 @@ class Star
 public:
 	void reset(double width, double height) 
 	{
-		pos = Position(random(0.0, width), random(0.0, height));
+		pos.setX(random(0.0, width));
+		pos.setY(random(0.0, height));
+		phase = random(0, 255); // randomize twinkle phase
 	};
 	void draw(ogstream gout)
 	{

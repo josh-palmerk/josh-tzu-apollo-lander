@@ -3,18 +3,20 @@
  * Lunar Lander simulation. This is the Game class and main()
  **********************************************************************/
 
-#include "position.h"    // everything should have a point
+#include "position.h"    // for POSITION
 #include "acceleration.h"// for ACCELERATION
+#include "velocity.h"    // for VELOCITY
+#include "angle.h"       // for ANGLE
 #include "lander.h"      // for LANDER
 #include "star.h"        // for STAR
 #include "uiInteract.h"  // for INTERFACE
 #include "uiDraw.h"      // for RANDOM and DRAW*
 #include "ground.h"      // for GROUND
 #include "test.h"        // for the unit tests
+#include <vector>
 #include <cmath>         // for SQRT
 #include <cassert>       // for ASSERT
 using namespace std;
-
 
 /*************************************************************************
  * SIMULATOR
@@ -23,11 +25,60 @@ using namespace std;
 class Simulator
 {
 public:
-   Simulator(const Position & posUpperRight) : ground(posUpperRight) {}
+   // Constructor
+   Simulator(const Position & posUpperRight)
+      : ground(posUpperRight),
+        lander(),
+        posUpperRight(posUpperRight)
+   {
+      // Initialize 50 stars at random positions
+      for (int i = 0; i < 50; i++)
+      {
+         Star star;
+         star.reset(posUpperRight.getX(), posUpperRight.getY());
+         stars.push_back(star);
+      }
+   }
+
+   // Display everything on the screen
+   void display()
+   {
+      ogstream gout;
+
+      // Draw the stars (each star twinkles independently)
+      for (Star & star : stars)
+         star.draw(gout);
+
+      // Draw the ground
+      ground.draw(gout);
+
+      // Draw the lander
+      gout.drawLander(lander.getPosition(), lander.getAngle().getRadians());
+   }
+
+   // Handle input and update simulation
+   void update(const Interface* pUI)
+   {
+      // Rotate lander
+      if (pUI->isRight())
+         lander.rotateRight();
+      if (pUI->isLeft())
+         lander.rotateLeft();
+
+      // Apply thrust
+      if (pUI->isUp())
+         lander.applyThrust();
+
+      // Move the lander (update position & velocity)
+      lander.advance();
+   }
+
+   // Members
    Ground ground;
+   Lander lander;
+   vector<Star> stars;
+   Position posUpperRight;
 };
-
-
 
 /*************************************
  * CALLBACK
@@ -35,20 +86,18 @@ public:
  **************************************/
 void callBack(const Interface* pUI, void* p)
 {
-   // the first step is to cast the void pointer into a game object. This
-   // is the first step of every single callback function in OpenGL. 
-   Simulator * pSimulator = (Simulator *)p;
+   // Convert void pointer into a Simulator pointer
+   Simulator* pSimulator = (Simulator*)p;
 
-   ogstream gout;
+   // Update simulation
+   pSimulator->update(pUI);
 
-   // draw the ground
-   pSimulator->ground.draw(gout);
+   // Draw everything
+   pSimulator->display();
 }
 
 /*********************************
- * Main is pretty sparse.  Just initialize
- * my LM type and call the display engine.
- * That is all!
+ * Main: Initialize and run the simulator
  *********************************/
 #ifdef _WIN32
 #include <windows.h>
@@ -64,16 +113,15 @@ int main(int argc, char** argv)
    // Run the unit tests
    testRunner();
 
-   
    // Initialize OpenGL
    Position posUpperRight(400, 400);
    Interface ui("Lunar Lander", posUpperRight);
 
-   // Initialize the game class
+   // Initialize the simulator
    Simulator simulator(posUpperRight);
 
-   // set everything into action
-   ui.run(callBack, (void *)&simulator);
+   // Run the simulation
+   ui.run(callBack, (void*)&simulator);
 
    return 0;
 }
