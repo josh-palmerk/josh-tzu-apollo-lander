@@ -33,7 +33,7 @@ void Lander :: reset(const Position & posUpperRight)
 void Lander :: draw(const Thrust & thrust, ogstream & gout) const
 {
 	gout.drawLander(pos, angle.getRadians());
-	gout.drawLanderFlames(pos, angle.getRadians(), thrust.isMain(), thrust.isClock(), thrust.isCounter());
+	if (isFlying()) gout.drawLanderFlames(pos, angle.getRadians(), thrust.isMain(), thrust.isClock(), thrust.isCounter());
 }
 
 /***************************************************************
@@ -75,3 +75,4 @@ void Lander :: coast(Acceleration & acceleration, double time)
    pos.add(acceleration, velocity, time);
    velocity.add(acceleration, time);
 }
+
