@@ -24,10 +24,11 @@ public:
 		pos.setY(random(0.0, height));
 		phase = random(0, 255); // randomize twinkle phase
 	};
-	void draw(ogstream gout)
+	void draw(ogstream & gout)
 	{
-		phase++;
-		gout.drawStar(pos);
+		this->phase++;
+		//if (phase > 254) phase = 0;
+		gout.drawStar(pos, phase);
 	};
 private:
 	Position pos;

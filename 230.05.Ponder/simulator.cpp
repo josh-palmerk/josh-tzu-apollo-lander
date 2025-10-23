@@ -18,6 +18,8 @@
 #include <cassert>       // for ASSERT
 using namespace std;
 
+#define GRAVITY  -1.62
+
 /*************************************************************************
  * SIMULATOR
  * Everything pertaining to the simulator.
@@ -28,7 +30,7 @@ public:
    // Constructor
    Simulator(const Position & posUpperRight)
       : ground(posUpperRight),
-        lander(),
+        lander(posUpperRight),
         posUpperRight(posUpperRight)
    {
       // Initialize 50 stars at random positions
@@ -53,24 +55,39 @@ public:
       ground.draw(gout);
 
       // Draw the lander
-      gout.drawLander(lander.getPosition(), lander.getAngle().getRadians());
+      lander.draw(thrust, gout);
+
+      // TODO display stats
+
+      // TODO if lander is landed/crashed display approppriate text
+
+      if (lander.isLanded()) gout.drawText(Position(posUpperRight.getX() / 2 - 60, posUpperRight.getX() / 2 + 10), "The Eagle Has Landed!");
+
    }
 
    // Handle input and update simulation
    void update(const Interface* pUI)
    {
-      // Rotate lander
-      if (pUI->isRight())
-         lander.rotateRight();
-      if (pUI->isLeft())
-         lander.rotateLeft();
 
-      // Apply thrust
-      if (pUI->isUp())
-         lander.applyThrust();
 
-      // Move the lander (update position & velocity)
-      lander.advance();
+       if (ground.hitGround(lander.getPosition(), lander.getWidth())) {
+           lander.crash();
+       }
+       else if (ground.onPlatform(lander.getPosition(), lander.getWidth())
+           && lander.getSpeed() < lander.getMaxSpeed()) {
+           lander.land();
+       }
+       else {
+           thrust.set(pUI);
+           lander.coast(lander.input(thrust, GRAVITY), .1);
+       }
+
+       if (lander.isDead() || lander.isLanded()) {
+
+           if (pUI->isSpace()) {
+               lander.reset(posUpperRight);
+           }
+       }
    }
 
    // Members
@@ -78,6 +95,7 @@ public:
    Lander lander;
    vector<Star> stars;
    Position posUpperRight;
+   Thrust thrust;
 };
 
 /*************************************
