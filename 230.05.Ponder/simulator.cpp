@@ -58,10 +58,17 @@ public:
       lander.draw(thrust, gout);
 
       // TODO display stats
-
+      double altitude = ground.getElevation(lander.getPosition()); // or manual calc
+      double speed = lander.getSpeed();               // or compute sqrt(dx² + dy²)
+      double fuel = lander.getFuel();
+      
+      gout.drawText(Position(10, posUpperRight.getX() -15), ("Fuel: " + to_string((int)fuel)+ " lbs").c_str());
+      gout.drawText(Position(10, posUpperRight.getX() -30), ("Altitude: " + to_string((int)altitude)+" Meters").c_str());
+      gout.drawText(Position(10, posUpperRight.getX() - 45), ("Speed: " + to_string((int)speed)+ " m/s").c_str());
       // TODO if lander is landed/crashed display approppriate text
 
       if (lander.isLanded()) gout.drawText(Position(posUpperRight.getX() / 2 - 60, posUpperRight.getX() / 2 + 10), "The Eagle Has Landed!");
+      if (lander.isDead()) gout.drawText(Position(posUpperRight.getX() / 2 - 60, posUpperRight.getX() / 2 + 10), "Houston, We got the problem.");
 
    }
 
