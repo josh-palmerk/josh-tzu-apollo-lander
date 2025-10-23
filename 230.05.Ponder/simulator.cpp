@@ -58,7 +58,11 @@ public:
       lander.draw(thrust, gout);
 
       // TODO display stats
+
       // TODO if lander is landed/crashed display approppriate text
+
+      if (lander.isLanded()) gout.drawText(Position(posUpperRight.getX() / 2 - 60, posUpperRight.getX() / 2 + 10), "The Eagle Has Landed!");
+
    }
 
    // Handle input and update simulation

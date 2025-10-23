@@ -67,6 +67,7 @@ public:
                                  double red   = 1.0,
                                  double green = 1.0,
                                  double blue  = 1.0) const;
+   void drawText(const Position& posTopLeft, const char* text) const;
 protected:
    Position pos;
    
@@ -74,7 +75,7 @@ private:
    Position rotate(const Position & posOrigin, double x, double y,
                    double rotation = 0.0) const;
    
-   void drawText(const Position & posTopLeft, const char * text) const;
+   
 
 };
 
