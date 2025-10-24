@@ -18,7 +18,7 @@
 #include <cassert>       // for ASSERT
 using namespace std;
 
-#define GRAVITY  -1.62
+#define GRAVITY  -1.62  // I hope this is right
 
 /*************************************************************************
  * SIMULATOR
@@ -57,7 +57,7 @@ public:
       // Draw the lander
       lander.draw(thrust, gout);
 
-      // TODO display stats
+      // display stats
       double altitude = ground.getElevation(lander.getPosition()); // or manual calc
       double speed = lander.getSpeed();               // or compute sqrt(dx² + dy²)
       double fuel = lander.getFuel();
@@ -65,18 +65,16 @@ public:
       gout.drawText(Position(10, posUpperRight.getX() -15), ("Fuel: " + to_string((int)fuel)+ " lbs").c_str());
       gout.drawText(Position(10, posUpperRight.getX() -30), ("Altitude: " + to_string((int)altitude)+" Meters").c_str());
       gout.drawText(Position(10, posUpperRight.getX() - 45), ("Speed: " + to_string((int)speed)+ " m/s").c_str());
-      // TODO if lander is landed/crashed display approppriate text
-
+      
+      // if lander is landed/crashed display approppriate text
       if (lander.isLanded()) gout.drawText(Position(posUpperRight.getX() / 2 - 60, posUpperRight.getX() / 2 + 10), "The Eagle Has Landed!");
-      if (lander.isDead()) gout.drawText(Position(posUpperRight.getX() / 2 - 60, posUpperRight.getX() / 2 + 10), "Houston, We got the problem.");
-
+      if (lander.isDead()) gout.drawText(Position(posUpperRight.getX() / 2 - 60, posUpperRight.getX() / 2 + 10), "Houston, we have a problem.");
    }
 
    // Handle input and update simulation
    void update(const Interface* pUI)
    {
-
-
+       // Handle game states
        if (ground.hitGround(lander.getPosition(), lander.getWidth())) {
            lander.crash();
        }
@@ -89,8 +87,8 @@ public:
            lander.coast(lander.input(thrust, GRAVITY), .1);
        }
 
+       // Reset after game end with space bar
        if (lander.isDead() || lander.isLanded()) {
-
            if (pUI->isSpace()) {
                lander.reset(posUpperRight);
            }
