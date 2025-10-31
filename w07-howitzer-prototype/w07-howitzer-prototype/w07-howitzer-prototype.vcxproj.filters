@@ -22,4 +22,9 @@
   <ItemGroup>
     <Text Include="prompts.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="simData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

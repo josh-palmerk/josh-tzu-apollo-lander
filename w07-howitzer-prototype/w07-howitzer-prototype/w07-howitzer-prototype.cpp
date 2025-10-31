@@ -3,6 +3,12 @@
 #include <iostream>
 #include <cmath>
 #include <iomanip>
+#include <vector>
+#include "SimData.h"
+//#include "HowitzerSim.h"
+
+SimData data;
+//HowitzerSim sim(...);
 
 using namespace std;
 
@@ -19,6 +25,8 @@ private:
     // --- Constants ---
     static constexpr double GRAVITY = 9.8;   // m/s^2 downward
     static constexpr double TIMESTEP = 0.01;  // s
+    const SimData& data;  // reference to lookup tables
+
 
     // --- Projectile properties ---
     double mass;      // kg
@@ -41,19 +49,15 @@ private:
 public:
     // Constructor
     // angleDeg_fromVertical: 0 = straight up, 90 = horizontal
-    HowitzerSim(double m_kg, double caliber_m, double muzzleVel_mps, double angleDeg_fromVertical)
-        : mass(m_kg), caliber(caliber_m), posX(0.0), posY(0.0),
+    HowitzerSim(const SimData& simData, double m_kg, double caliber_m, double muzzleVel_mps, double angleDeg_fromVertical)
+        : data(simData),
+        mass(m_kg), caliber(caliber_m), posX(0.0), posY(0.0),
         velX(0.0), velY(0.0), accelX(0.0), accelY(0.0),
         hangTime(0.0), maxAltitude(0.0), distance(0.0)
     {
-        // Convert angle: user supplies degrees from vertical
         double angleRad = angleDeg_fromVertical * M_PI / 180.0;
-
-        // Since 0° is straight up, vertical component = v * cos(theta)
-        // horizontal component = v * sin(theta)
         velY = muzzleVel_mps * std::cos(angleRad);
         velX = muzzleVel_mps * std::sin(angleRad);
-
         inertia = calculateInertia();
     }
 
@@ -71,22 +75,57 @@ public:
     double calcVelocity(double v0, double a, double t) const {
         return v0 + a * t;
     }
+    
 
-    // Perform one explicit Euler update of position & velocity
     void step() {
-        // Gravity only, for now
-        accelX = 0.0;
-        accelY = -GRAVITY;
+        // --- 1. Interpolate gravity based on current altitude ---
+        double localGravity = linearInterpolate(
+            posY,
+            data.altitudeGravityTable,
+            data.gravityTable
+        );
 
-        // Update position using s = s0 + v*t + ½*a*t²
+        // --- 2. Interpolate air density based on current altitude ---
+        double localDensity = linearInterpolate(
+            posY,
+            data.altitudeDensityTable,
+            data.densityTable
+        );
+
+        // --- 3. Compute drag force ---
+        const double Cd = 0.3;              // drag coefficient (constant)
+        const double diameter = 0.15489;    // m (projectile diameter)
+        const double area = M_PI * std::pow(diameter / 2.0, 2); // m² (cross-sectional area)
+
+        // Total velocity magnitude
+        double vMag = std::sqrt(velX * velX + velY * velY);
+
+        // Drag force magnitude (N)
+        double Fd = 0.5 * localDensity * Cd * area * vMag * vMag;
+
+        // Convert to acceleration magnitude (m/s²)
+        double dragAccelMag = Fd / mass;
+
+        // Angle of motion (radians)
+        double theta = std::atan2(velY, velX);
+
+        // Components of drag acceleration (opposite direction of velocity)
+        double dragAccelX = -dragAccelMag * std::cos(theta);
+        double dragAccelY = -dragAccelMag * std::sin(theta);
+
+        // --- 4. Combine accelerations ---
+        accelX = dragAccelX;
+        accelY = -localGravity + dragAccelY;
+
+        // --- 5. Update position using s = s0 + v*t + ½*a*t² ---
         double newPosX = calcDisplacement(posX, velX, accelX, TIMESTEP);
         double newPosY = calcDisplacement(posY, velY, accelY, TIMESTEP);
 
-        // Update velocity using v = v0 + a*t
+        // --- 6. Update velocity using v = v0 + a*t ---
         double newVelX = calcVelocity(velX, accelX, TIMESTEP);
         double newVelY = calcVelocity(velY, accelY, TIMESTEP);
 
-        // Commit updates
+        // --- 7. Commit updates ---
         posX = newPosX;
         posY = newPosY;
         velX = newVelX;
@@ -96,8 +135,61 @@ public:
         if (posY > maxAltitude) maxAltitude = posY;
         distance = posX;
 
-        
+        // --- 8. Clamp to ground ---
+        if (posY <= 0.0 && hangTime > 0.0) {
+            posY = 0.0;
+            velY = 0.0;
+            accelY = 0.0;
+        }
+    }
 
+
+    // --- Linear interpolation using full table ---
+    // Returns y corresponding to given x based on provided tableX/tableY.
+    double linearInterpolate(double x,
+        const std::vector<double>& tableX,
+        const std::vector<double>& tableY) const
+    {
+        if (tableX.size() != tableY.size() || tableX.empty())
+            throw std::invalid_argument("Invalid interpolation table: mismatched sizes or empty.");
+
+        // If x is outside range, clamp to endpoints
+        if (x <= tableX.front()) return tableY.front();
+        if (x >= tableX.back())  return tableY.back();
+
+        // Find bounding indices
+        for (size_t i = 0; i < tableX.size() - 1; ++i) {
+            if (x >= tableX[i] && x <= tableX[i + 1]) {
+                double x1 = tableX[i];
+                double x2 = tableX[i + 1];
+                double y1 = tableY[i];
+                double y2 = tableY[i + 1];
+                double t = (x - x1) / (x2 - x1);
+                return y1 + t * (y2 - y1);
+            }
+        }
+
+        // Should never reach here if table is sorted
+        return tableY.back();
+    }
+
+    // --- Simple 2-point linear interpolation (useful for ground impact) ---
+    // Interpolates Y for a given X, given two points (x1,y1) and (x2,y2)
+    double linearInterpolate(double x, double x1, double y1, double x2, double y2) const {
+        if (x2 == x1) return y1; // avoid divide-by-zero
+        double t = (x - x1) / (x2 - x1);
+        return y1 + t * (y2 - y1);
+    }
+
+    // --- Find impact location between timesteps ---
+    // Given previous (x1, y1) and current (x2, y2) positions, find x where y = 0
+    double interpolateGroundImpact(double x1, double y1, double x2, double y2) const {
+        if ((y1 > 0 && y2 > 0) || (y1 < 0 && y2 < 0)) {
+            // No ground crossing
+            return std::nan("");
+        }
+        // Linear interpolation to find x at which y = 0
+        return linearInterpolate(0.0, y1, x1, y2, x2);
     }
 
     // Accessors
@@ -129,11 +221,12 @@ int main() {
     const double muzzleVel = 827.0;               // m/s
     const double projMass = 46.7;               // kg
     const double projDiam_m = 154.89 / 1000.0;    // mm -> m
+    SimData data;
 
     // Launch angle: 75 degrees from vertical (user said 0 degrees is straight up)
     const double launchAngleFromVertical = 75.0;  // deg
 
-    HowitzerSim sim(projMass, projDiam_m, muzzleVel, launchAngleFromVertical);
+    HowitzerSim sim(data, projMass, projDiam_m, muzzleVel, launchAngleFromVertical);
 
     std::cout << "Simulating 20 timesteps (" << 20 << " * 0.01 s) for M777 -> M795\n";
     std::cout << "(Angle convention: 0° = straight up; here angle = "
