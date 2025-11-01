@@ -22,8 +22,6 @@ void Lander :: reset(const Position & posUpperRight)
 	velocity.setDX(random(-10.0, -4.0));
 	velocity.setDY(random(-2.0, 2.0));
 	pos = Position(posUpperRight.getX() - 1, random(posUpperRight.getY() * .75, posUpperRight.getY() * .95));
-
-
 }
 
 /***************************************************************

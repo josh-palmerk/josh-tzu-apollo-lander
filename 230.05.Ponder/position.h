@@ -9,7 +9,6 @@
 
 #pragma once
 
-
 class Velocity;        // for Position::add()
 class Acceleration;    // for Position::add()
 class TestPosition;    // for the unit tests
