@@ -18,7 +18,7 @@ using namespace std;
 // Simple physics sim for an M795 shell fired from an M777 (starter version).
 // - Angle convention: 0 degrees = straight up. Angle increases toward the forward (horizontal) direction.
 // - Timesteps are fixed at 0.01 s.
-// - No drag, no wind, no rotation yet — just gravity and kinematics.
+// - No drag, no wind, no rotation yet ?just gravity and kinematics.
 
 class HowitzerSim {
 private:
@@ -59,6 +59,12 @@ public:
         velY = muzzleVel_mps * std::cos(angleRad);
         velX = muzzleVel_mps * std::sin(angleRad);
         inertia = calculateInertia();
+
+        double localDensity = linearInterpolate(
+            posY,
+            data.altitudeDensityTable,
+            data.densityTable
+        );
     }
 
     // Approximate inertia for a solid cylinder (stub)
@@ -93,17 +99,33 @@ public:
         );
 
         // --- 3. Compute drag force ---
-        const double Cd = 0.3;              // drag coefficient (constant)
+        // --- 3a. Interpolate speed of sound based on altitude ---
+        double localSpeedOfSound = linearInterpolate(
+            posY,
+            data.altitudeSpeedSoundTable,
+            data.speedOfSoundTable
+
+        );
+
+        // drag coefficient (constant)
         const double diameter = 0.15489;    // m (projectile diameter)
-        const double area = M_PI * std::pow(diameter / 2.0, 2); // m² (cross-sectional area)
+        const double area = M_PI * std::pow(diameter / 2.0, 2); // m?(cross-sectional area)
 
         // Total velocity magnitude
         double vMag = std::sqrt(velX * velX + velY * velY);
 
+        // Compute Mach number and interpolate Cd ---
+        double mach = vMag / localSpeedOfSound;
+        double Cd = linearInterpolate(
+            mach,
+            data.machTable,
+            data.dragCoeffTable
+        );
+
         // Drag force magnitude (N)
         double Fd = 0.5 * localDensity * Cd * area * vMag * vMag;
 
-        // Convert to acceleration magnitude (m/s²)
+        // Convert to acceleration magnitude (m/s?
         double dragAccelMag = Fd / mass;
 
         // Angle of motion (radians)
@@ -117,7 +139,7 @@ public:
         accelX = dragAccelX;
         accelY = -localGravity + dragAccelY;
 
-        // --- 5. Update position using s = s0 + v*t + ½*a*t² ---
+        // --- 5. Update position using s = s0 + v*t + ?a*t?---
         double newPosX = calcDisplacement(posX, velX, accelX, TIMESTEP);
         double newPosY = calcDisplacement(posY, velY, accelY, TIMESTEP);
 
@@ -223,14 +245,15 @@ int main() {
     const double projDiam_m = 154.89 / 1000.0;    // mm -> m
     SimData data;
 
+
     // Launch angle: 75 degrees from vertical (user said 0 degrees is straight up)
     const double launchAngleFromVertical = 75.0;  // deg
 
     HowitzerSim sim(data, projMass, projDiam_m, muzzleVel, launchAngleFromVertical);
 
     std::cout << "Simulating 20 timesteps (" << 20 << " * 0.01 s) for M777 -> M795\n";
-    std::cout << "(Angle convention: 0° = straight up; here angle = "
-        << launchAngleFromVertical << "° from vertical)\n\n";
+    std::cout << "(Angle convention: 0?= straight up; here angle = "
+        << launchAngleFromVertical << "?from vertical)\n\n";
 
     // Run exactly 20 timesteps and print state each step
      int steps = 0;
@@ -238,19 +261,23 @@ int main() {
     //    sim.step();
     //    sim.printState();
     //}
-
+     double prevX = 0.0, prevY = 0.0;
      while (sim.getAltitude() > 0 || steps == 0) {
+         prevX = sim.getDistance();
+         prevY = sim.getDistance();
          sim.step();
-         sim.printState();
          steps++;
      }
 
-
-    std::cout << "\nSummary after " << steps << " steps:\n"
-        << "Hang time (s): " << sim.getHangTime() << "\n"
-        << "Altitude (m): " << sim.getAltitude() << "\n"
-        << "Max altitude (m): " << sim.getMaxAltitude() << "\n"
-        << "Distance (m): " << sim.getDistance() << "\n";
-
+     if(sim.getAltitude() <= 0.0)
+     {
+         double impactX = sim.linearInterpolate(0.0, prevY, prevX, sim.getAltitude(), sim.getDistance());
+         std::cout << "\nSummary after " << steps << " steps:\n"
+             << "\nImpact detected!" << "\n"
+             << "Hang time (s): " << sim.getHangTime() << "\n"
+             << "Altitude (m): " << sim.getAltitude() << "\n"
+             << "Max altitude (m): " << sim.getMaxAltitude() << "\n"
+             << "Distance (m): " << sim.getDistance() << "\n";
+     }
     return 0;
 }
