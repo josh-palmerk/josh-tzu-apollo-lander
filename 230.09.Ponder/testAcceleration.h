@@ -323,8 +323,14 @@ private:
     *********************************************/
    void addDDX_zero()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
-   }
+	   // setup
+       Acceleration a(2.3, 4.5);
+	   // exercise
+	   a.addDDX(0.0);
+	   // verify
+	   assertEquals(a.ddx, 2.3);
+	   assertEquals(a.ddy, 4.5);
+   }   // teardown
    
    /*********************************************
     * name:    ADD DDX 4.1
@@ -333,8 +339,14 @@ private:
     *********************************************/
    void addDDX_value()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
-   }
+       // setup
+       Acceleration a(2.3, 4.5);
+       // exercise
+       a.addDDX(4.1);
+       // verify
+       assertEquals(a.ddx, 6.4);
+       assertEquals(a.ddy, 4.5);
+   }   // teardown
 
    /*********************************************
     * name:    ADD DDY ZERO
@@ -343,8 +355,14 @@ private:
     *********************************************/
    void addDDY_zero()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
-   }
+       // setup
+       Acceleration a(2.3, 4.5);
+       // exercise
+       a.addDDY(0.0);
+       // verify
+       assertEquals(a.ddx, 2.3);
+       assertEquals(a.ddy, 4.5);
+   }   // teardown
 
    /*********************************************
     * name:    ADD DDY 4.1
@@ -353,8 +371,14 @@ private:
     *********************************************/
    void addDDY_value()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
-   }
+       // setup
+       Acceleration a(2.3, 4.5);
+       // exercise
+       a.addDDY(4.1);
+       // verify
+       assertEquals(a.ddx, 2.3);
+       assertEquals(a.ddy, 8.6);
+   }   // teardown
 
    /*********************************************
     * name:    ADD NOTHING TO NOTHING
@@ -363,8 +387,15 @@ private:
     *********************************************/
    void add_zeroZero()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
-   }
+	   // setup
+       Acceleration aLHS(0.0, 0.0);
+	   Acceleration aRHS(0.0, 0.0);
+	   // exercise
+	   aLHS.add(aRHS);
+	   // verify
+	   assertEquals(aLHS.ddx, 0.0);
+	   assertEquals(aLHS.ddy, 0.0);
+   }   // teardown
 
    /*********************************************
     * name:    ADD NOTHING TO A VALUE
@@ -373,7 +404,14 @@ private:
     *********************************************/
    void add_valueZero()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+       // setup
+      Acceleration aLHS(1.1, 2.2);
+      Acceleration aRHS(0.0, 0.0);
+      // exercise
+      aLHS.add(aRHS);
+      // verify
+      assertEquals(aLHS.ddx, 1.1);
+	  assertEquals(aLHS.ddy, 2.2);
    }
 
    /*********************************************
@@ -383,7 +421,14 @@ private:
     *********************************************/
    void add_zeroValue()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+       // setup
+      Acceleration aLHS(0.0, 0.0);
+      Acceleration aRHS(4.4, 7.7);
+      // exercise
+      aLHS.add(aRHS);
+      // verify
+      assertEquals(aLHS.ddx, 4.4);
+	  assertEquals(aLHS.ddy, 7.7);
    }
 
    /*********************************************
@@ -393,7 +438,14 @@ private:
     *********************************************/
    void add_valueValue()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+       // setup
+      Acceleration aLHS(1.1, 2.2);
+      Acceleration aRHS(4.4, 7.7);
+      // exercise
+      aLHS.add(aRHS);
+      // verify
+	  assertEquals(aLHS.ddx, 5.5);
+	  assertEquals(aLHS.ddy, 9.9);
    }
 
 };
