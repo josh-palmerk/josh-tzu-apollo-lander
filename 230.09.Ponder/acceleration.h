@@ -27,6 +27,7 @@ class Acceleration
    friend TestVelocity;
    friend TestAcceleration;
    friend TestLander;
+   friend class Position;
 
 public:
    // constructors
