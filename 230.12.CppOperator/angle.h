@@ -45,6 +45,25 @@ public:
    // Display
    void display(ostream & out) const { }
 
+
+   /**************** OPERATORS *******************************/
+
+   //assignment - josh
+
+   //negative - josh
+
+   //equals/not equals - josh
+
+
+
+
+   // insert - tzu
+
+   //extract - tzu
+
+   // increment/decrement - tzu
+
+
 private:
    // Convert functions
    double convertToDegrees(double radians) const { return -1.0; }
@@ -55,4 +74,3 @@ private:
 
    double radians;
 };
-
