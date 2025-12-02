@@ -48,12 +48,34 @@ public:
 
    /**************** OPERATORS *******************************/
 
-   //assignment - josh
+   //assignment operator - josh
+
+   Angle operator=(const Angle& rhs) { 
+	   radians = rhs.radians;
+	   return *this; 
+   }
+   Angle operator=(double radians) { 
+	   setRadians(radians); 
+	   return *this; 
+   }
+
 
    //negative - josh
+   Angle operator-() const {
+	   Angle negAngle;
+	   negAngle.radians = normalize(-radians);
+	   return negAngle;
+   }
+
+
 
    //equals/not equals - josh
-
+   Angle operator==(const Angle& rhs) const {
+	   return radians == rhs.radians;
+   }
+   Angle operator!=(const Angle& rhs) const {
+	   return radians != rhs.radians;
+   }
 
 
 
