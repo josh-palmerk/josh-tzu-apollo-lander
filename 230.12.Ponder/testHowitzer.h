@@ -12,6 +12,7 @@
 
 #include "howitzer.h"
 #include "unitTest.h"
+#include <cassert>
 
 /*******************************
  * TEST HOWITZER
@@ -64,7 +65,13 @@ private:
      *********************************************/
    void defaultConstructor()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+       Howitzer h;
+	   // verify
+	   assertEquals(h.position.getPixelsX(), 0.0);
+	   assertEquals(h.position.getPixelsY(), 0.0);
+	   assertEquals(h.muzzleVelocity, DEFAULT_MUZZLE_VELOCITY);
+	   assertEquals(h.elevation.getDegrees(), 45.0);
+
    }
 
    /*****************************************************************
@@ -80,7 +87,17 @@ private:
      *********************************************/
    void getPosition_zero()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.position.setPixelsX(0);
+	   h.position.setPixelsY(0);
+	   Position pos;
+	   // exercise
+	   pos = h.getPosition();
+	   // verify
+	   assertEquals(pos.getPixelsX(), 0);
+	   assertEquals(pos.getPixelsY(), 0);
+
    }
 
    /*********************************************
@@ -90,7 +107,17 @@ private:
     *********************************************/
    void getPosition_middle()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.position.setPixelsX(123.4);
+	   h.position.setPixelsY(567.8);
+	   Position pos;
+	   // exercise
+	   pos = h.getPosition();
+	   // verify
+	   assertEquals(pos.getPixelsX(), 123.4);
+	   assertEquals(pos.getPixelsY(), 567.8);
+
    }
 
    /*********************************************
@@ -100,7 +127,15 @@ private:
     *********************************************/
    void getMuzzleVelocity_slow()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.muzzleVelocity = 24.68;
+	   double m;
+	   // exercise
+	   m = h.getMuzzleVelocity();
+	   // verify
+	   assertEquals(m, 24.68);
+
    }
 
    /*********************************************
@@ -110,7 +145,15 @@ private:
     *********************************************/
    void getMuzzleVelocity_standard()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.muzzleVelocity = 827.00;
+	   double m;
+	   // exercise
+	   m = h.getMuzzleVelocity();
+	   // verify
+	   assertEquals(m, 827.00);
+
    }
 
    /*********************************************
@@ -120,7 +163,15 @@ private:
     *********************************************/
    void getElevation_up()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(0);
+	   double e;
+	   // exercise
+	   e = h.elevation.getRadians();
+	   // verify
+	   assertEquals(e, 0);
+
    }
 
    /*********************************************
@@ -130,7 +181,15 @@ private:
     *********************************************/
    void getElevation_right()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(0.4);
+	   double e;
+	   // exercise
+	   e = h.elevation.getRadians();
+	   // verify
+	   assertEquals(e, 0.4);
+
    }
 
    /*********************************************
@@ -140,7 +199,15 @@ private:
     *********************************************/
    void getElevation_left()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(5.8);
+	   double e;
+	   // exercise
+	   e = h.elevation.getRadians();
+	   // verify
+	   assertEquals(e, 5.8);
+
    }
 
    /*****************************************************************
@@ -156,7 +223,16 @@ private:
      *********************************************/
    void generatePosition_small()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   Position posUpperRight;
+	   posUpperRight.setPixelsX(10);
+	   posUpperRight.setPixelsY(10);
+	   // exercise
+	   h.generatePosition(posUpperRight);
+	   // verify
+	   assert(h.position.getPixelsX() >= 1.0 && h.position.getPixelsX() <= 9.0);
+       
    }
 
     /*********************************************
@@ -166,7 +242,16 @@ private:
     *********************************************/
    void generatePosition_large()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   Position posUpperRight;
+	   posUpperRight.setPixelsX(1000);
+	   posUpperRight.setPixelsY(1000);
+	   // exercise
+	   h.generatePosition(posUpperRight);
+	   // verify
+	   assert(h.position.getPixelsX() >= 100.0 && h.position.getPixelsX() <= 900.0);
+       
    }
 
    /*********************************************
@@ -176,7 +261,14 @@ private:
     *********************************************/
    void raise_rightDown()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(0.5);
+	   // exercise
+	   h.raise(-0.1);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), 0.6);
+
    }
 
    /*********************************************
@@ -186,7 +278,14 @@ private:
     *********************************************/
    void raise_rightUp()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(0.5);
+	   // exercise
+	   h.raise(0.1);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), 0.4);
+
    }
 
    /*********************************************
@@ -196,7 +295,8 @@ private:
     *********************************************/
    void raise_leftDown()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+      // setup
+
    }
 
    /*********************************************
