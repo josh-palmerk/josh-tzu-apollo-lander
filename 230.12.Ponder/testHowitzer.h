@@ -296,6 +296,12 @@ private:
    void raise_leftDown()
    {
       // setup
+       Howitzer h;
+	   h.elevation.setRadians(-0.5);
+	   // exercise
+	   h.raise(-0.1);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), -0.6);
 
    }
 
@@ -306,7 +312,14 @@ private:
     *********************************************/
    void raise_leftUp()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(-0.5);
+	   // exercise
+	   h.raise(0.1);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), -0.4);
+
    }
 
    /*********************************************
@@ -316,7 +329,14 @@ private:
     *********************************************/
    void rotate_clock()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(1.23);
+	   // exercise 
+	   h.rotate(.3);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), 1.53);
+
    }
 
    /*********************************************
@@ -326,7 +346,14 @@ private:
     *********************************************/
    void rotate_counterClock()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(1.23);
+	   // exercise
+	   h.rotate(-.3);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), 0.93);
+
    }
 
    /*********************************************
@@ -336,7 +363,14 @@ private:
     *********************************************/
    void rotate_wrapClock()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(6.1);
+	   // exercise
+	   h.rotate(.2);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), 0.1);
+
    }
 
    /*********************************************
@@ -346,7 +380,14 @@ private:
     *********************************************/
    void rotate_wrapCounterClock()
    {
-      assertUnit(NOT_YET_IMPLEMENTED);
+	   // setup
+	   Howitzer h;
+	   h.elevation.setRadians(0.1);
+	   // exercise
+	   h.rotate(-.2);
+	   // verify
+	   assertEquals(h.elevation.getRadians(), 6.1);
+
    }
 
    /*****************************************************************

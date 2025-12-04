@@ -40,6 +40,7 @@ public:
    void advance(double simulationTime) {}
 
 
+   void fire(const Position& pos, double angleDegrees, double muzzleVelocity) {}
 
 
 private:
