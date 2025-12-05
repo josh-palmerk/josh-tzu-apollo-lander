@@ -32,12 +32,16 @@ public:
    friend ::TestProjectile;
 
    // create a new projectile with the default settings
-   Projectile() : mass(-99.9), radius(-99.9) {}
+   Projectile() : mass(46.7), radius(154.89) {}
 
 
 
    // advance the round forward until the next unit of time
-   void advance(double simulationTime) {}
+   void advance(double simulationTime) {
+
+
+   
+   }
 
 
    void fire(const Position& pos, double angleDegrees, double muzzleVelocity) {}

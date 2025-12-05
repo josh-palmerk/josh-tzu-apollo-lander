@@ -32,7 +32,10 @@ void callBack(const Interface* pUI, void* p)
    ogstream gout;
    Position pos(10,10);
    gout = pos;
-   gout << "Hello world";
+   //gout << "Hello world";
+   //gout.drawRectangle();
+   gout.drawHowitzer(Position(1000, 1000), 0.0, 0.0);
+   //gout.drawLine(Position());
 }
 
 double Position::metersFromPixels = 40.0;
