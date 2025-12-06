@@ -14,6 +14,7 @@ class TestPosition;
 class TestVelocity;
 class TestAcceleration;
 class TestProjectile;
+class Projectile;
 
 // for add()
 class Acceleration;
@@ -29,7 +30,10 @@ class Velocity
    friend TestPosition;
    friend TestVelocity;
    friend TestProjectile;
+   friend Projectile;
    friend class Position;
+   
+
    
 public:
    // constructors
