@@ -55,8 +55,8 @@ public:
 
         PositionVelocityTime pvt;
 
-        pvt.pos.x = 0.0;
-        pvt.pos.y = 0.0;
+        pvt.pos.setMetersX(0.0);
+        pvt.pos.setMetersY(0.0);
 
         double r = angleDegrees * M_PI / 180.0;
         pvt.v.dx = muzzleVelocity * cos(r);
@@ -108,8 +108,8 @@ public:
         // ----------------------------
         // UPDATE POSITION
         // ----------------------------
-        next.pos.x = prev.pos.x + prev.v.dx * dt + 0.5 * totalAX * dt * dt;
-        next.pos.y = prev.pos.y + prev.v.dy * dt + 0.5 * totalAY * dt * dt;
+		next.pos.setMetersX(prev.pos.getMetersX() + prev.v.dx * dt + 0.5 * totalAX * dt * dt);
+		next.pos.setMetersY(prev.pos.getMetersY() + prev.v.dy * dt + 0.5 * totalAY * dt * dt);
 
         // ----------------------------
         // UPDATE VELOCITY

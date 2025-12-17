@@ -72,6 +72,8 @@ class Howitzer
       // get the elevation
       const Angle & getElevation() const { return elevation; }
 
+	  void setPosition(const Position& position) { this->position = position; }
+
    private:
       Position position;      // initial position of the projectile
       double muzzleVelocity;  // muzzle velocity, defaults to 827.0 m/s

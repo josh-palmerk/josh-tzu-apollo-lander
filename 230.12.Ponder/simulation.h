@@ -24,7 +24,7 @@ public:
         // Put howitzer at x = 200m on the ground
         Position start;
         start.setMetersX(200.0);
-        start.setMetersY(ground.getElevationMeters(start.getMetersX()));
+        start.setMetersY(ground.getElevationMeters(start));
 
         howitzer.setPosition(start);
     }
@@ -37,7 +37,7 @@ public:
         ground.draw(gout);
 
         // Draw howitzer - requires pos, angle, and age
-        howitzer.draw(gout);
+        howitzer.draw(gout, 0);
 
         // Later we will draw projectile and target (not for Ticket 5)
     }
